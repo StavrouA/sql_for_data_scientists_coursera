@@ -1,0 +1,43 @@
+Question 1: Pull a list of customer ids with the customer’s full name, and address, along with combining their city and country together. Be sure to make a space in between these two and make it UPPER CASE.
+
+Select c.CustomerId, c. FirstName, c.LastName, c.Address, upper(c.City || " " || c.Country) AS 'City and Country'
+From Customers as c;
+
+Question 2: Create a new employee user id by combining the first 4 letters of the employee’s first name with the first 2 letters of the employee’s last name. Make the new field lower case and pull each individual step to show your work.
+
+Select FirstName, LastName, lower(substr(FirstName,1,4) || '' || substr(LastName,1,2)) as empID
+From Employees;
+
+Question 3: Show a list of employees who have worked for the company for 15 or more years using the current date function. Sort by lastname ascending.
+
+Select e.EmployeeId
+       ,e.FirstName
+       ,e.LastName
+       ,e.HireDate 
+       ,STRFTIME('%Y', e.HireDate) as HireYear
+       ,2020 - STRFTIME('%Y', e.HireDate) as Years
+From Employees as e
+Where Years>=15
+Order By Years ASC;
+
+Question 4: Profiling the Customers table, answer the following question. 
+
+Select *
+From Customers
+Where Address is null;        --change "Address" for the rest variables to answer the all questions
+
+Question 5: Find the cities with the most customers and rank in descending order.
+
+Select count(CustomerId) as custnumber,City
+From Customers
+Group By City
+Order By custnumber DESC;
+
+Question 6: Create a new customer invoice id by combining a customer’s invoice id with their first and last name while ordering your query in the following order: firstname, lastname, and invoiceID.
+
+Select c.FirstName
+       ,c.LastName
+       ,i.InvoiceId
+       ,(c.FirstName || '' || c.LastName || '' || i.InvoiceId) AS newcustID
+From Customers AS c Left Join Invoices AS i on c.CustomerId = i.CustomerId
+Order By c.FirstName, c.LastName, i.InvoiceId;
