@@ -1,0 +1,63 @@
+Question 1: Find all the tracks that have a length of 5,000,000 milliseconds or more.
+
+Select count(TrackId)
+From Tracks
+Where Milliseconds >= 5000000;
+
+Question 2: Find all the invoices whose total is between $5 and $15 dollars.
+
+Select InvoiceId
+From Invoices
+Where Total between 5 and 15;
+
+Question 3: Find all the customers from the following States: RJ, DF, AB, BC, CA, WA, NY.
+
+Select CustomerId, FirstName, LastName, Company
+From Customers
+Where State IN ('RJ','DF','AB','AC','BC','CA','WA','NY');
+
+Question 4: Find all the invoices for customer 56 and 58 where the total was between $1.00 and $5.00.
+
+Select InvoiceId, InvoiceDate
+From (Select InvoiceId, InvoiceDate
+      From Invoices as I left join Customers as C ON I.CustomerId = C.CustomerId
+      Where Total Between 1 and 5)
+Where InvoiceId = '315';
+
+Question 5: Find all the tracks whose name starts with 'All'.
+
+Select TrackId, Name
+From Tracks
+Where Name Like 'All%';
+
+Question 6: Find all the customer emails that start with "J" and are from gmail.com.
+
+Select CustomerId,Email
+From Customers
+Where Email LIKE 'J%gmail.com';
+
+Question 7: Find all the invoices from the billing city Brasília, Edmonton, and Vancouver and sort in descending order by invoice ID.
+
+Select InvoiceId, BillingCity , Total
+From Invoices
+Where BillingCity IN ('Brasilia','Edmonton','Vancouver')
+Order By InvoiceId DESC;
+
+Question 8: Show the number of orders placed by each customer (hint: this is found in the invoices table) and sort the result by the number of orders in descending order.
+
+Select count(i.InvoiceId), i.CustomerId
+From Invoices as i
+Group By i.CustomerId
+Order By i.InvoiceId DESC;
+
+
+Question 9: Find the albums with 12 or more tracks.
+
+Select * 
+From (Select count(TrackId) as cT, AlbumId, Title
+      From (Select t.TrackId, t.Name, a.AlbumId, a.Title
+         From Tracks as t Left Join Albums as a on t.AlbumId = a.AlbumId
+          Order By a.AlbumId)
+    Group By AlbumId)
+Where cT>=12;
+
