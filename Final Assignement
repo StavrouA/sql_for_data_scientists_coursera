@@ -1,0 +1,445 @@
+Data Scientist Role Play: Profiling and Analyzing the Yelp Dataset Coursera Worksheet
+
+This is a 2-part assignment. In the first part, you are asked a series of questions that will help you profile and understand the data just like a data scientist would. For this first part of the assignment, you will be assessed both on the correctness of your findings, as well as the code you used to arrive at your answer. You will be graded on how easy your code is to read, so remember to use proper formatting and comments where necessary.
+
+In the second part of the assignment, you are asked to come up with your own inferences and analysis of the data for a particular research question you want to answer. You will be required to prepare the dataset for the analysis you choose to do. As with the first part, you will be graded, in part, on how easy your code is to read, so use proper formatting and comments to illustrate and communicate your intent as required.
+
+For both parts of this assignment, use this "worksheet." It provides all the questions you are being asked, and your job will be to transfer your answers and SQL coding where indicated into this worksheet so that your peers can review your work. You should be able to use any Text Editor (Windows Notepad, Apple TextEdit, Notepad ++, Sublime Text, etc.) to copy and paste your answers. If you are going to use Word or some other page layout application, just be careful to make sure your answers and code are lined appropriately.
+In this case, you may want to save as a PDF to ensure your formatting remains intact for you reviewer.
+
+
+
+Part 1: Yelp Dataset Profiling and Understanding
+
+1. Profile the data by finding the total number of records for each of the tables below:
+	
+i. Attribute table = 10000
+ii. Business table = 10000
+iii. Category table = 10000
+iv. Checkin table = 10000
+v. elite_years table = 10000
+vi. friend table = 10000
+vii. hours table = 10000
+viii. photo table = 10000
+ix. review table = 10000
+x. tip table = 10000
+xi. user table = 10000
+	
+
+
+2. Find the total distinct records by either the foreign key or primary key for each table. If two foreign keys are listed in the table, please specify which foreign key.
+
+i. Business = 10000	(PKey "id")
+ii. Hours = 1562	(FKey "business_id")
+iii. Category = 2643	(FKey "business_id")
+iv. Attribute = 1115	(FKey "business_id")
+v. Review = 8090 (using FKey "business_id") or 9581 (using FKey "user_id") or 10000 (using PKey "id")
+vi. Checkin = 493 (FKey "business_id")
+vii. Photo = 6493 (using FKey "business_id") or 10000 (using PKey "id")
+viii. Tip = 537 (using FKey "user_id") or 3979 (using FKey "business_id")
+ix. User = 10000 (PKey "id")
+x. Friend = 11 (FKey "user_id")
+xi. Elite_years = 2780 (FKey "user_id")
+
+Note: Primary Keys are denoted in the ER-Diagram with a yellow key icon.	
+
+
+
+3. Are there any columns with null values in the Users table? Indicate "yes," or "no."
+
+	Answer: no
+	
+	
+	SQL code used to arrive at answer:
+	
+	SELECT count(*)
+		From user
+		Where id IS NULL OR
+			name IS NULL OR
+			review_count IS NULL OR
+			yelping_since IS NULL OR
+			useful IS NULL OR
+			funny IS NULL OR
+			cool IS NULL OR
+			fans IS NULL OR
+			average_stars IS NULL OR
+			compliment_hot IS NULL OR
+			compliment_more IS NULL OR
+			compliment_profile IS NULL OR
+			compliment_cute IS NULL OR
+			compliment_list IS NULL OR
+			compliment_note IS NULL OR
+			compliment_plain IS NULL OR
+			compliment_cool IS NULL OR
+			compliment_funny IS NULL OR
+			compliment_writer IS NULL OR
+			compliment_photos IS NULL;
+	
+
+	
+4. For each table and column listed below, display the smallest (minimum), largest (maximum), and average (mean) value for the following fields:
+
+	i. Table: Review, Column: Stars
+	
+		min: 1		max: 5		avg: 3.7082
+		
+	
+	ii. Table: Business, Column: Stars
+	
+		min: 1		max: 5 		avg: 3.6549
+
+
+	iii. Table: Tip, Column: Likes
+	
+		min: 0		max: 2		avg: 0.0144
+
+
+	iv. Table: Checkin, Column: Count
+
+		min: 1		max: 53		avg: 1.9414
+
+
+	v. Table: User, Column: Review_count
+
+		min: 0		max: 2000	avg: 24.2995
+		
+		
+5. List the cities with the most reviews in descending order:
+
+	SQL code used to arrive at answer:
+	
+		SELECT city,sum(review_count) as num_of_rev
+		FROM business
+		GROUP BY city
+		ORDER BY num_of_rev DESC;
+	
+	
+	Copy and Paste the Result Below:
+	
+		+-----------------+------------+
+		| city            | num_of_rev |
+		+-----------------+------------+
+		| Las Vegas       |      82854 |
+		| Phoenix         |      34503 |
+		| Toronto         |      24113 |
+		| Scottsdale      |      20614 |
+		| Charlotte       |      12523 |
+		| Henderson       |      10871 |
+		| Tempe           |      10504 |
+		| Pittsburgh      |       9798 |
+		| MontrÃ©al        |       9448 |
+		| Chandler        |       8112 |
+		| Mesa            |       6875 |
+		| Gilbert         |       6380 |
+		| Cleveland       |       5593 |
+		| Madison         |       5265 |
+		| Glendale        |       4406 |
+		| Mississauga     |       3814 |
+		| Edinburgh       |       2792 |
+		| Peoria          |       2624 |
+		| North Las Vegas |       2438 |
+		| Markham         |       2352 |
+		| Champaign       |       2029 |
+		| Stuttgart       |       1849 |
+		| Surprise        |       1520 |
+		| Lakewood        |       1465 |
+		| Goodyear        |       1155 |
+		+-----------------+------------+
+		(Output limit exceeded, 25 of 362 total rows shown)
+	
+
+	
+6. Find the distribution of star ratings to the business in the following cities:
+
+i. Avon
+
+	
+SQL code used to arrive at answer:
+
+	SELECT stars
+		  ,count(stars)
+	FROM business
+	Where City = 'Avon'
+	Group By Stars;
+
+
+Copy and Paste the Resulting Table Below (2 columns â€“ star rating and count):
+
+	+-------+--------------+
+	| stars | count(stars) |
+	+-------+--------------+
+	|   1.5 |            1 |
+	|   2.5 |            2 |
+	|   3.5 |            3 |
+	|   4.0 |            2 |
+	|   4.5 |            1 |
+	|   5.0 |            1 |
+	+-------+--------------+
+
+ii. Beachwood
+
+SQL code used to arrive at answer:
+
+	SELECT stars
+      ,count(stars)
+	FROM business
+	Where City = 'Beachwood'
+	Group By Stars;
+	
+Copy and Paste the Resulting Table Below (2 columns â€“ star rating and count):
+	
+	+-------+--------------+
+	| stars | count(stars) |
+	+-------+--------------+
+	|   2.0 |            1 |
+	|   2.5 |            1 |
+	|   3.0 |            2 |
+	|   3.5 |            2 |
+	|   4.0 |            1 |
+	|   4.5 |            2 |
+	|   5.0 |            5 |
+	+-------+--------------+
+
+7. Find the top 3 users based on their total number of reviews:
+	
+	SQL code used to arrive at answer:
+	
+	SELECT id, name, review_count
+	FROM user
+	ORDER BY review_count DESC
+	LIMIT 3;
+
+	
+	Copy and Paste the Result Below:
+	
+	+------------------------+--------+--------------+
+	| id                     | name   | review_count |
+	+------------------------+--------+--------------+
+	| -G7Zkl1wIWBBmD0KRy_sCw | Gerald |         2000 |
+	| -3s52C4zL_DHRK0ULG6qtg | Sara   |         1629 |
+	| -8lbUNlXVSoXqaRRiHiSNg | Yuri   |         1339 |
+	+------------------------+--------+--------------+
+
+
+8. Does posing more reviews correlate with more fans?
+
+	Please explain your findings and interpretation of the results:
+	
+	There are 9581 distinct user_id entries in 'review' table and 10000 total user_id entries, meaning that there are 419 reviews
+	that are from a user that has already reviewed at least once before. So, since 96% of users reviewed only once, the number of reviews
+	and number of fans are positevely correlated, more users will result in more reviews.
+	
+
+	
+9. Are there more reviews with the word "love" or with the word "hate" in them?
+
+	Answer:
+
+	There are more reviews cotaining the word "love".
+	
+	SQL code used to arrive at answer:
+
+	SELECT 
+		sum(case when text LIKE '%love%' then 1 else 0 end) AS LoveCount,
+		sum(case when text LIKE '%hate%' then 1 else 0 end) AS HateCount
+	FROM review;
+
+	--using sum of ones is like using the function 'count'
+	
+	
+10. Find the top 10 users with the most fans:
+
+	SQL code used to arrive at answer:
+	
+	SELECT fans, id, name
+	FROM user
+	ORDER BY fans DESC
+	LIMIT 10;
+	
+	Copy and Paste the Result Below:
+	
+	+------+------------------------+-----------+
+	| fans | id                     | name      |
+	+------+------------------------+-----------+
+	|  503 | -9I98YbNQnLdAmcYfb324Q | Amy       |
+	|  497 | -8EnCioUmDygAbsYZmTeRQ | Mimi      |
+	|  311 | --2vR0DIsmQ6WfcSzKWigw | Harald    |
+	|  253 | -G7Zkl1wIWBBmD0KRy_sCw | Gerald    |
+	|  173 | -0IiMAZI2SsQ7VmyzJjokQ | Christine |
+	|  159 | -g3XIcCb2b-BD0QBCcq2Sw | Lisa      |
+	|  133 | -9bbDysuiWeo2VShFJJtcw | Cat       |
+	|  126 | -FZBTkAZEXoP7CYvRV2ZwQ | William   |
+	|  124 | -9da1xk7zgnnfO1uTVYGkA | Fran      |
+	|  120 | -lh59ko3dxChBSZ9U7LfUw | Lissa     |
+	+------+------------------------+-----------+
+	
+11. Is there a strong relationship (or correlation) between having a high number of fans and being listed as "useful" or "funny?" Out of the top 10 users with the highest number of fans, what percent are also listed as â€œusefulâ€ or â€œfunnyâ€?
+
+Key:
+0% - 25% - Low relationship
+26% - 75% - Medium relationship
+76% - 100% - Strong relationship
+	
+	SQL code used to arrive at answer:
+	
+	SELECT id
+      ,fans
+      ,useful
+      ,funny
+	FROM user
+	ORDER BY fans DESC
+	LIMIT 10;
+
+	Copy and Paste the Result Below:
+	
+	+------------------------+------+--------+--------+
+	| id                     | fans | useful |  funny |
+	+------------------------+------+--------+--------+
+	| -9I98YbNQnLdAmcYfb324Q |  503 |   3226 |   2554 |
+	| -8EnCioUmDygAbsYZmTeRQ |  497 |    257 |    138 |
+	| --2vR0DIsmQ6WfcSzKWigw |  311 | 122921 | 122419 |
+	| -G7Zkl1wIWBBmD0KRy_sCw |  253 |  17524 |   2324 |
+	| -0IiMAZI2SsQ7VmyzJjokQ |  173 |   4834 |   6646 |
+	| -g3XIcCb2b-BD0QBCcq2Sw |  159 |     48 |     13 |
+	| -9bbDysuiWeo2VShFJJtcw |  133 |   1062 |    672 |
+	| -FZBTkAZEXoP7CYvRV2ZwQ |  126 |   9363 |   9361 |
+	| -9da1xk7zgnnfO1uTVYGkA |  124 |   9851 |   7606 |
+	| -lh59ko3dxChBSZ9U7LfUw |  120 |    455 |    150 |
+	+------------------------+------+--------+--------+
+
+	
+	Please explain your findings and interpretation of the results:
+	
+	We notice that from the top 10 users with most fans most of them have plenty 'useful' and 'funny' entries. However, there seems to be almost no correlation
+	between them, since the order of 'useful' and 'funny' seems random, even though 'fans' is in descenting order. A user with 311 fans has 122921 'useful' entries
+	and 122419 'funny' entries, while a user with 159 has 48 and 13 entries respectively and a third user with 503 fans has 3226 and 2554 entries.
+	While there is some relationship if we include all 'id' entries (users with no fans tend to have zero 'useful' and 'funny' entries), I believe that
+	there is Low Relationship (0-25%) between my data since the number of 'useful' and 'funny' entries seem to be random cencerning the top 10 users with most fans.
+	
+
+Part 2: Inferences and Analysis
+
+1. Pick one city and category of your choice and group the businesses in that city or category by their overall star rating. Compare the businesses with 2-3 stars to the businesses with 4-5 stars and answer the following questions. Include your code.
+	
+i. Do the two groups you chose to analyze have a different distribution of hours?
+
+	Yes, there are 'hours' data for the three Restaurants out of the four in the city of Las Vegas, the two of them that belong in the "4-to-5-star" category are open during 11:00 to 20:00 (except Sunday which is 08:00 - 14:00) and 10:00 - 23:00 respectively, while the one that belongs in the "2-to-3-star" category
+	is open during 11:00 - 00:00.
+	
+ii. Do the two groups you chose to analyze have a different number of reviews?
+
+	Yes, the "2-to-3-star" category has 123 reviews (1 Restaurant), while the "4-to-5-star" category has on average 313 reviews (168,768 and 3 respectively).
+ 
+ 
+iii. Are you able to infer anything from the location data provided between these two groups? Explain.
+
+	The only inference is that they are not in the same neighborhood, because as we notice from the "neighorhood" variable they are located in Summerlin, Chinatown and Eastside (there is no info about the last one).
+
+SQL code used for analysis:
+
+	SELECT b.id
+      ,b.stars
+      ,b.review_count
+      ,b.city
+      ,b.neighborhood
+      ,h.hours
+      ,c.category
+	FROM business AS b LEFT JOIN category AS c ON b.id = c.business_id LEFT JOIN hours AS h on b.id = h.business_id
+	WHERE b.city = 'Las Vegas' AND c.category = 'Restaurants';
+
+
+2. Group business based on the ones that are open and the ones that are closed. What differences can you find between the ones that are still open and the ones that are closed? List at least two differences and the SQL code you used to arrive at your answer.
+
+i. Difference 1:
+
+	Only 15.2% of the total businesses are closed, while 84.8% are open.
+
+ii. Difference 2:
+	
+	The average reviews are way less on the businesses that are closed (23.2) than those that are open (31.75).
+ 
+ 
+SQL code used for analysis:
+
+	SELECT is_open
+		,avg(review_count)
+		,count(is_open)
+	FROM business
+	GROUP BY is_open;
+	
+3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
+
+Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
+	
+i. Indicate the type of analysis you chose to do:
+
+	I chose to check how the number of stars a business gets from its customers gets affected. I would go doing that by either regressing "stars" on the rest variables or using a "classification tree" algorithm.
+
+ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
+	
+	The data that I am drawing from the database are the business id (even though it is not needed), the stars that correspond to each business, the number of reviews each business has and the city of the businesses, all these variables drawn by the "business" table.
+	I also join these results with the number of checkins each business has from the "checkin" table, as well as a column of ones and zeroes, which indicate wether the business is in the food industry or not. There are not enough information for every business,
+	so for the business that there are no information the column value is "None". The type of analysis that I would choose to do is weather a simple regression model or a classification by using a classification tree algorithm. I would try two separate ways for these
+	analyses, one with "FoodServices" and one without it, but I would dismiss all rows with "None" values under the "FoodServices" variable.
+	
+	I chose these data because I would like to see what variables affect the number of stars a business gets, so that a potential new entrant in the market would know what characteristics his / her business should have in order to get positive reviews (of course, other than doing a good job at managing the business).
+	I believe that the variables that I chose are logical only based on my intuition.For instance, the location and the category of the business could have an impact on the reviews it gets, a food industry located in Las Vegas could have on average 3.5 stars, while a non-food business in Phoenix could have 2 stars on average.
+	I would test all of these characteristics, as well as make a model for future predictions for new entrants.
+
+
+
+iii. Output of your finished dataset:
+
+	+------------------------+-------+--------------+--------------+-----------------+--------------+
+	| id                     | stars | review_count | city         | num_of_checkins | FoodServices |
+	+------------------------+-------+--------------+--------------+-----------------+--------------+
+	| 2DBNUgEeFaQ3FznUA7P1eQ |   4.0 |            4 | Aberdour     |            None |         None |
+	| 064fFc4CdNxAJJDVR-7FSQ |   5.0 |           15 | Ahwahtukee   |            None |         None |
+	| -v8Z3mdbbPs1ljLziHr2DA |   4.0 |          166 | Ahwatukee    |            None |         None |
+	| 0Rni7ocMC_Lg2UH0lDeKMQ |   3.5 |           69 | Ahwatukee    |            None |         None |
+	| -4-MzST67P_jnX4mh3MIcw |   4.0 |           15 | Ajax         |            None |         None |
+	| -YGQwikbX2fXUIjyegR7pw |   4.5 |           73 | Ajax         |            None |         None |
+	| 0Jyc53wOZt4dbbVPrKjuxA |   3.0 |           32 | Ajax         |            None |         None |
+	| 0Tz3J6I9tPIwYpcpgMk6jg |   2.5 |            6 | Ajax         |            None |         None |
+	| 0W-qCKguiieaKQM5Pc75zw |   4.0 |            4 | Ajax         |            None |         None |
+	| 0ZNIAF_1d83uK1Z7mADTfA |   2.0 |            8 | Ajax         |            None |         None |
+	| 14T3cCQcTjAHzoE_4r1bxw |   4.0 |           13 | Ajax         |            None |         None |
+	| 1FnwvtISSL0HxIdPLLow1g |   3.5 |           16 | Ajax         |            None |         None |
+	| 1p3YpI-mspxnYZI614CyXA |   4.0 |            4 | Ajax         |            None |         None |
+	| 2FX-3kEaNfw4irfoylhx9A |   3.5 |            3 | Ajax         |            None |         None |
+	| 2l7q7SiHvjCtAkQyTECbBA |   3.5 |           37 | Ajax         |            None |         None |
+	| -K1ns3HK47YzogYqOg-9LQ |   3.5 |            3 | Allison Park |            None |         None |
+	| -QHKjrlSlhpIwGoppdiViA |   1.5 |            6 | Allison Park |            None |         None |
+	| 0hMRtJ7Qq6E0xLueVB2iPQ |   4.0 |            3 | Allison Park |            None |         None |
+	| 1UrXBPneHKLgmr-OYZUHmA |   3.0 |           12 | Allison Park |            None |         None |
+	| -InU2nAbC9AuS-Um2Cowgw |   4.0 |           37 | Ambridge     |            None |         None |
+	| 0EyRe-VkW8gYxxZ7NCQXeQ |   4.5 |            4 | Ambridge     |            None |         None |
+	| 2XUJM063C50TLfK-s902cQ |   5.0 |           29 | Ambridge     |            None |         None |
+	| 0LG3xsnWrY_Il598TqR7Mg |   3.5 |            8 | Amherst      |            None |         None |
+	| 17DMCE3ZqRZbGT9aS5TT4A |   3.5 |            3 | Anjou        |            None |         None |
+	| 1RaqclhYT9KkJ4eznsI86Q |   3.5 |           11 | Anjou        |            None |         None |
+	+------------------------+-------+--------------+--------------+-----------------+--------------+
+	(Output limit exceeded, 25 of 10000 total rows shown)
+
+iv. Provide the SQL code you used to create your final dataset:
+	
+	SELECT b.id
+		,b.stars
+		,b.review_count
+		,b.city
+		,ci.num_of_checkins
+		,fserv.FoodServices
+	FROM business AS b LEFT JOIN (SELECT business_id, sum(count) AS num_of_checkins
+								FROM checkin
+								GROUP BY business_id) AS ci ON b.id = ci.business_id
+	--counting the number of check-ins per business and assigning them to their respective business id
+					LEFT JOIN (SELECT business_id, 
+								CASE
+								WHEN category IN ('Restaurants', 'Food', 'Fast Food', 'Burgers', 'Pizza', 'Italian','Specialty Food', 'Sandwiches')
+								THEN 1
+								ELSE 0
+								END FoodServices
+								FROM category
+								GROUP BY business_id) AS fserv ON b.id = fserv.business_id
+	--creating a new column names "FoodServices" where it takes the value 1 if the business is in the Food Industry and 0 otherwise. Businesses with no category assignment get "None" value, I will try regressing both with and without "FoodServices" variable, when I regress with it I will delete "None" values as there is no info about these observations.                          
+	ORDER BY city;
