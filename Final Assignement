@@ -378,8 +378,8 @@ i. Indicate the type of analysis you chose to do:
 ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
 	
 	The data that I am drawing from the database are the business id (even though it is not needed), the stars that correspond to each business, the number of reviews each business has and the city of the businesses, all these variables drawn by the "business" table.
-	I also join these results with the number of checkins each business has from the "checkin" table, as well as a column of ones and zeroes, which indicate wether the business is in the food industry or not. There are not enough information for every business,
-	so for the business that there are no information the column value is "None". The type of analysis that I would choose to do is weather a simple regression model or a classification by using a classification tree algorithm. I would try two separate ways for these
+	I also join these results with the number of checkins each business has from the "checkin" table, as well as a column of ones and zeroes, which indicate wether the business is in the food industry or not. There is not enough information for every business,
+	so for the businesses that there is no information the column value is "None". The type of analysis that I would choose to do is wether a simple regression model or a classification by using a classification tree algorithm. I would try two separate ways for these
 	analyses, one with "FoodServices" and one without it, but I would dismiss all rows with "None" values under the "FoodServices" variable.
 	
 	I chose these data because I would like to see what variables affect the number of stars a business gets, so that a potential new entrant in the market would know what characteristics his / her business should have in order to get positive reviews (of course, other than doing a good job at managing the business).
